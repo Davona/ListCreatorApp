@@ -1,23 +1,24 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ListCreatorApp
+namespace CollectionApp
 {
-    class _List
+    class _ListInt:IEnumerable
     {
         private const int _defaultCapacity = 4;
         private int[] _items;
         private int _size;
         private int _version;
         static readonly int[] _emptyArray = new int[0];
-        public _List()
+        public _ListInt()
         {
             _items = _emptyArray;
         }
-        public _List(int capacity)
+        public _ListInt(int capacity)
         {
             if (capacity == 0)
                 _items = _emptyArray;
@@ -108,9 +109,9 @@ namespace ListCreatorApp
             }
             _version++;
         }
-        public _List GetRange(int index, int count)
+        public _ListInt GetRange(int index, int count)
         {
-            _List list = new _List(count);
+            _ListInt list = new _ListInt(count);
             Array.Copy(_items, count, list._items, 0, _size);
             list._size = count;
             return list;
@@ -167,20 +168,20 @@ namespace ListCreatorApp
                 _version++;
             }
         }
-        public void Reverse() 
+        public void Reverse()
         {
             Reverse(0, Count);
         }
-        public void Reverse(int index,int count) 
+        public void Reverse(int index, int count)
         {
             Array.Reverse(_items, index, count);
             _version++;
         }
-        public int LastIndexOf(int item) 
+        public int LastIndexOf(int item)
         {
-            
+
             if (_size == 0)
-            {  // Special case for empty list
+            {  
                 return -1;
             }
             else
@@ -188,10 +189,38 @@ namespace ListCreatorApp
                 return LastIndexOf(item, _size - 1, _size);
             }
         }
-        public int LastIndexOf(int item,int index,int count) 
+        public int LastIndexOf(int item, int index, int count)
         {
             return Array.LastIndexOf(_items, item, index, count);
-        
+
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return new IntIEnumerator(_items, _size);
+        }
+    }
+    public class IntIEnumerator : IEnumerator
+    {
+        public IntIEnumerator(int[] item,int seize)
+        {
+            _item = item;
+            _seize = seize;
+
+        }
+        int[] _item;
+        int _seize;
+        int count = 0;
+        public object Current => _item[count++];
+
+        public bool MoveNext()
+        {
+            return count < _seize;
+        }
+
+        public void Reset()
+        {
+            throw new NotImplementedException();
         }
     }
 }
